@@ -39,6 +39,10 @@ function setup(loader, resources) {
     const scene = new PIXI.Sprite(resources.scene.texture);
     configureObject(app, scene, 1.5, 0, 0)
 
+    //criei um filtro de borragem na imagem
+    const blurFilter = new PIXI.filters.BlurFilter(8)
+    scene.filters = [blurFilter]
+
     // Crie um sprite para o alvo
     const target = new PIXI.Graphics();
     target.beginFill(0x39916f);// (0x pra iniciar a cor, depois posso colocar a cor que for.)
