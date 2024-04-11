@@ -11,7 +11,7 @@ document.body.appendChild(app.view);
 
 // Carregue os recursos do jogo
 PIXI.Loader.shared
-    .add('scene', 'ocean.jpg')
+    .add('scene', 'cenario.jpg')
     .add('character', 'bonequin.png')
     .load(setup);
 
@@ -35,20 +35,20 @@ function setup(loader, resources) {
         y: app.screen.height / 2
     }
 
-    // cenario
+    // cenario //Modifico a imagem abaixo do personagem (o background);
     const scene = new PIXI.Sprite(resources.scene.texture);
-    configureObject(app, scene, 0.3, 0, 0)
+    configureObject(app, scene, 1.5, 0, 0)
 
     // Crie um sprite para o alvo
     const target = new PIXI.Graphics();
-    target.beginFill(0xFF0000);
+    target.beginFill(0x39916f);// (0x pra iniciar a cor, depois posso colocar a cor que for.)
     target.drawRect(0, 0, 50, 50);
     target.endFill();
     configureObject(app, target, 1, middle.x, app.screen.height - 100, true, true)
 
     // função alerta ao clicar
     function handleClick() {
-        alert('Bloco vermelhor clicado!')
+        alert('Bloco Verdinho clicado!')
     }
 
     // Ouvinte de clique para chamar função
@@ -65,7 +65,7 @@ function setup(loader, resources) {
     document.addEventListener("keydown", function (event) {
         // O evento do parâmetro é do tipo KeyboardEvent
 
-        const speed = 5;
+        const speed = 8;
 
         if (event.code === 'KeyA') {
             character.x -= speed;
