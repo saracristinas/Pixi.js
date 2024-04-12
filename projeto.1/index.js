@@ -13,6 +13,7 @@ document.body.appendChild(app.view);
 PIXI.Loader.shared
     .add('scene', 'cenario.jpg')
     .add('character', 'bonequin.png')
+    .add('scen', 'cenario')
     .load(setup);
 
 
@@ -37,11 +38,25 @@ function setup(loader, resources) {
 
     // cenario //Modifico a imagem abaixo do personagem (o background);
     const scene = new PIXI.Sprite(resources.scene.texture);
+    const scen = new PIXI.Sprite(resources.scene.texture);
+
+    scene.x = 0;
+    scen.x = scen.width;
+
+    app.stage.addChild(scen);
+    app.stage.addChild(scene);
+
     configureObject(app, scene, 1.5, 0, 0)
 
-    //criei um filtro de borragem na imagem
-    const blurFilter = new PIXI.filters.BlurFilter(8)
-    scene.filters = [blurFilter]
+
+
+
+    const blurFilter = new PIXI.filters.BlurFilter(8);
+    scene.filters = [blurFilter];
+    scen.filters = [blurFilter];
+
+    ///configuração do objeto para fazer a transição da imagem (pra parecer que ta correndo)
+    configureObject(app, scen, 1.5, 0, 0)
 
     // Crie um sprite para o alvo
     const target = new PIXI.Graphics();
@@ -52,7 +67,7 @@ function setup(loader, resources) {
 
     // função alerta ao clicar
     function handleClick() {
-        alert('Bloco Verdinho clicado!')
+        alert('Bloco verdinho clicado!')
     }
 
     // Ouvinte de clique para chamar função
@@ -64,42 +79,53 @@ function setup(loader, resources) {
     character.anchor.set(0.5);
     configureObject(app, character, 1, middle.x, middle.y, true)
 
-
-
     document.addEventListener("keydown", function (event) {
         // O evento do parâmetro é do tipo KeyboardEvent
 
         const speed = 8;
 
-        if (event.code === 'KeyA') {
+        if (event.code === 'KeyA' || event.code === 'ArrowLeft') {
             character.x -= speed;
         } 
         
-        if (event.code === 'KeyW') {
+        if (event.code === 'KeyW' || event.code === 'ArrowUp') {
             character.y -= speed;
         } 
 
-        if (event.code === 'KeyS') {
+        if (event.code === 'KeyS' || event.code === 'ArrowDown') {
             character.y += speed;
         } 
         
-        if (event.code === 'KeyD') {
+        if (event.code === 'KeyD' || event.code === 'ArrowRight') {
             character.x += speed;
         } 
 
         if (event.code === 'Space') {
             setInterval(()=>{character.angle += 1}, 10)
         }   
-
         console.log(event.code)
     });
 
     // Função de atualização do jogo
     app.ticker.add(delta => {
+
         // Atualize o jogo aqui
+        scene.x -= 1;
+        scen.x -= 1;
+
+         // Verifique se a primeira sprite saiu completamente da tela
+         if (scene.x + scene.width <= 0) {
+            // Reposicione a primeira sprite à direita da segunda sprite
+            scene.x = scen.x + scen.width;
+        }
+
+        // Verifique se a segunda sprite saiu completamente da tela
+        if (scen.x + scen.width <= 0) {
+            // Reposicione a segunda sprite à direita da primeira sprite
+            scen.x = scene.x + scene.width;
+        }
     });
 }
-
 
 // Adicione controles de teclado
 const keys = {
