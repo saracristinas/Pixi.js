@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "gsap": "^3.12.5",
+    "howler": "^2.2.4",
     "pixi.js": "^8.1.0"
   }
 }

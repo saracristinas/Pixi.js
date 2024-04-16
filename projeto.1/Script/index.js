@@ -17,6 +17,7 @@ PIXI.Loader.shared
     .add('back04', 'img/04.png')
     .add('back06', 'img/05.png')
     .add('back05', 'img/06.png')
+    .add('sounds', 'sound/efeito-sonoro.mp3') //testando o som
     .load(setup);
 
 
@@ -46,7 +47,7 @@ function setup(loader, resources) {
         app.screen.height
     )
 
-    back01.tileTransform.scale.set(1.0);
+    back01.tileTransform.scale.set(0.8);//aqui mudo a escola da imagem
     app.stage.addChild(back01)
 
 
@@ -118,8 +119,7 @@ function setup(loader, resources) {
     const character = new PIXI.Sprite(resources.character.texture);
     character.id = 'personagem'
     character.anchor.set(0.5);
-    configureObject(app, character, 0.5, middle.x, middle.y, true)
-
+    configureObject(app, character, 0.6, middle.x, middle.y, true)
 
     // Ouvinte de clique para chamar função
     target.on('pointerup', handleClick);
@@ -151,8 +151,6 @@ function setup(loader, resources) {
         console.log(event.code)
     });
 
-
-
     const blurFilter = new PIXI.filters.BlurFilter(0);
     scene.filters = [blurFilter];
 
@@ -167,23 +165,18 @@ function setup(loader, resources) {
     // Função de atualização do jogo
     app.ticker.add(delta => {
 
-        // // Atualize o jogo aqui
-        // scene.x -= 1;
-        // scen.x -= 1;
-
-        //  // Verifique se a primeira sprite saiu completamente da tela
-        //  if (scene.x + scene.width <= 0) {
-        //     // Reposicione a primeira sprite à direita da segunda sprite
-        //     scene.x = scen.x + scen.width;
-        // }
-
-        // // Verifique se a segunda sprite saiu completamente da tela
-        // if (scen.x + scen.width <= 0) {
-        //     // Reposicione a segunda sprite à direita da primeira sprite
-        //     scen.x = scene.x + scene.width;
-        // }
     });
 }
+
+// const soundURL = resources.sound.soundURL;
+const sound = new Howl({
+    src: ['https://liaser.s3.sa-east-1.amazonaws.com/praticas/testes-estagiario/efeito-sonoro.mp3'],
+    loop: true,
+    volume: 0.1,
+    autoplay: true
+});
+
+// debugger
 
 // Adicione controles de teclado
 const keys = {
@@ -193,103 +186,6 @@ const keys = {
     down: keyboard('ArrowDown'),
 };
 
-// Adicione um personagem //carrega a imagem
-// const character = new PIXI.Graphics();
-// character.beginFill(0xFF0000);
-// character.drawRect(0, 0, 50, 50);
-// character.endFill();
-// character.x = app.screen.width / 2;
-// character.y = app.screen.height - 100;
-// app.stage.addChild(character);
-
-
-
-
-
-// // Velocidade de movimento do personagem
-// const speed = 10;//nao faz nada 
-
-// // Controles de teclado //nao faz nada também
-// keys.left.press = () => {
-//     character.x -= speed;
-// };
-
-// keys.right.press = () => {
-//     character.x += speed;
-// };
-
-// keys.up.press = () => {
-//     character.y -= speed;
-// };
-
-// keys.down.press = () => {
-//     character.y += speed;
-// };
-
-// // Controles de mouse //nao faz nada
-// app.stage.interactive = true;
-// app.stage.on('pointerdown', (event) => {
-//     // Verifique se o clique do mouse atingiu o alvo
-//     if (target.getBounds().contains(event.data.global.x, event.data.global.y)) {
-//         console.log('Target hit!');
-//     }
-// });
-
-// Função auxiliar para criar controles de teclado
-// function keyboard(key) {
-//     const k = {
-//         code: key,
-//         isDown: false,
-//         isUp: true,
-//         press: undefined,
-//         release: undefined,
-//         downHandler: (event) => {
-//             if (event.key === k.code) {
-//                 if (k.isUp && k.press) k.press();
-//                 k.isDown = true;
-//                 k.isUp = false;
-//                 event.preventDefault();
-//             }
-//         },
-//         upHandler: (event) => {
-//             if (event.key === k.code) {
-//                 if (k.isDown && k.release) k.release();
-//                 k.isDown = false;
-//                 k.isUp = true;
-//                 event.preventDefault();
-//             }
-//         },
-//     };
-
-//     window.addEventListener('keydown', k.downHandler.bind(k), false);
-//     window.addEventListener('keyup', k.upHandler.bind(k), false);
-
-//     return k;
-// }
-
-// Função para criar e adicionar um novo alvo aleatório
-// function createRandomTarget() {
-//     const randomX = Math.random() * app.screen.width;
-//     const randomY = Math.random() * app.screen.height;
-//     const target = new PIXI.Sprite(PIXI.Loader.shared.resources['target'].texture);
-//     target.anchor.set(0.5);
-//     target.x = randomX;
-//     target.y = randomY;
-//     app.stage.addChild(target);
-
-//     // Movimento do alvo em direção ao personagem
-//     app.ticker.add(() => {
-//         const dx = character.x - target.x;
-//         const dy = character.y - target.y;
-//         const angle = Math.atan2(dy, dx);
-//         const vx = Math.cos(angle) * 2;
-//         const vy = Math.sin(angle) * 2;
-//         target.x += vx;
-//         target.y += vy;
-//     });
-// }
-
-// Chame createRandomTarget a cada 2 segundos
-// setInterval(createRandomTarget, 2000);
-
 app.stage.sortableChildren = true;
+
+
