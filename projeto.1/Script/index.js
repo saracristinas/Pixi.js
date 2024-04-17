@@ -91,24 +91,53 @@ function setup(loader, resources) {
     app.stage.addChild(back05)
 
     //back05
-    const back06 = new PIXI.TilingSprite(
-        resources.back06.texture,
-        app.screen.width,
-        app.screen.height
-    )
+    const back06 = new PIXI.TilingSprite(resources.back06.texture, app.screen.width, app.screen.height)
 
+    back06.tileTransform.position.y = 30;
     back06.tileTransform.scale.set(1.0);
     app.stage.addChild(back06)
 
-
     app.ticker.add(() => {
-        back06.tileTransform.position.x -= 1.3;
-        back05.tileTransform.position.x -= 1.1;
-        back04.tileTransform.position.x -= 0.9;
-        back03.tileTransform.position.x -= 0.7;
-        back02.tileTransform.position.x -= 0.5;
-        back01.tileTransform.position.x -= 0.3;
+        // back06.tileTransform.position.x -= 1.3;
+        // back05.tileTransform.position.x -= 1.1;
+        // back04.tileTransform.position.x -= 0.9;
+        // back03.tileTransform.position.x -= 0.7;
+        // back02.tileTransform.position.x -= 0.5;
+        // back01.tileTransform.position.x -= 0.3;
     })
+
+
+    const velocity = 5
+
+    function walkingCharacter(position) {
+        switch (position) {
+            case "front":
+                back06.tileTransform.position.x -= velocity * 1.3;
+                back05.tileTransform.position.x -= velocity * 1.1;
+                back04.tileTransform.position.x -= velocity * 0.9;
+                back03.tileTransform.position.x -= velocity * 0.7;
+                back02.tileTransform.position.x -= velocity * 0.5;
+                back01.tileTransform.position.x -= velocity * 0.3;
+
+                break;
+
+            case "back":
+                back06.tileTransform.position.x += velocity * 1.3;
+                back05.tileTransform.position.x += velocity * 1.1;
+                back04.tileTransform.position.x += velocity * 0.9;
+                back03.tileTransform.position.x += velocity * 0.7;
+                back02.tileTransform.position.x += velocity * 0.5;
+                back01.tileTransform.position.x += velocity * 0.3;
+
+                break;
+
+            default:
+                break;
+        }
+    }
+
+
+
 
     function handleClick() {
         alert('Bloco clicado!')
@@ -119,10 +148,10 @@ function setup(loader, resources) {
     const character = new PIXI.Sprite(resources.character.texture);
     character.id = 'personagem'
     character.anchor.set(0.5);
-    configureObject(app, character, 0.6, middle.x, middle.y, true)
+    configureObject(app, character, 0.6, 100, middle.y * 1.5, true)
 
     // Ouvinte de clique para chamar função
-    target.on('pointerup', handleClick);
+    // target.on('pointerup', handleClick);
 
     document.addEventListener("keydown", function (event) {
         // O evento do parâmetro é do tipo KeyboardEvent
@@ -130,7 +159,8 @@ function setup(loader, resources) {
         const speed = 8;
 
         if (event.code === 'KeyA' || event.code === 'ArrowLeft') {
-            character.x -= speed;
+            // character.x -= speed;
+            walkingCharacter('back')
         }
 
         if (event.code === 'KeyW' || event.code === 'ArrowUp') {
@@ -142,7 +172,8 @@ function setup(loader, resources) {
         }
 
         if (event.code === 'KeyD' || event.code === 'ArrowRight') {
-            character.x += speed;
+            // character.x += speed;
+            walkingCharacter('front')
         }
 
         if (event.code === 'Space') {
@@ -152,7 +183,7 @@ function setup(loader, resources) {
     });
 
     const blurFilter = new PIXI.filters.BlurFilter(0);
-    scene.filters = [blurFilter];
+    // scene.filters = [blurFilter];
 
     // Crie um sprite para o alvo
     const target = new PIXI.Graphics();
@@ -179,12 +210,12 @@ const sound = new Howl({
 // debugger
 
 // Adicione controles de teclado
-const keys = {
-    left: keyboard('ArrowLeft'),
-    right: keyboard('ArrowRight'),
-    up: keyboard('ArrowUp'),
-    down: keyboard('ArrowDown'),
-};
+// const keys = {
+//     left: keyboard('ArrowLeft'),
+//     right: keyboard('ArrowRight'),
+//     up: keyboard('ArrowUp'),
+//     down: keyboard('ArrowDown'),
+// };
 
 app.stage.sortableChildren = true;
 
