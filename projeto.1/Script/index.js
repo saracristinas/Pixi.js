@@ -1,4 +1,4 @@
-// Crie a aplicação Pixi.js //cria a imagem
+//Crie a aplicação Pixi.js //cria a imagem
 const app = new PIXI.Application({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -10,14 +10,15 @@ document.body.appendChild(app.view);
 
 // Carregue os recursos do jogo
 PIXI.Loader.shared
-    .add('character', 'img/bonequin.png')
-    .add('back01', 'img/01.png')
-    .add('back02', 'img/02.png')
-    .add('back03', 'img/03.png')
-    .add('back04', 'img/04.png')
-    .add('back06', 'img/05.png')
-    .add('back05', 'img/06.png')
+    .add('character', 'img/geral/bonequin.png')
+    .add('back01', 'img/cenario/01.png')
+    .add('back02', 'img/cenario/02.png')
+    .add('back03', 'img/cenario/03.png')
+    .add('back04', 'img/cenario/04.png')
+    .add('back06', 'img/cenario/05.png')
+    .add('back05', 'img/cenario/06.png')
     .add('sounds', 'sound/efeito-sonoro.mp3') //testando o som
+    .add('personaJson', 'img/walking/spritesheet.json')
     .load(setup);
 
 
@@ -35,10 +36,16 @@ function configureObject(app, obj, scale, x, y, visible = true, interactive = fa
 
 function setup(loader, resources) {
 
+
+
+
     const middle = {
         x: app.screen.width / 2,
         y: app.screen.height / 2
     }
+
+
+
 
     // cenario //Modifico a imagem abaixo do personagem (o background);
     const back01 = new PIXI.TilingSprite(
@@ -97,16 +104,6 @@ function setup(loader, resources) {
     back06.tileTransform.scale.set(1.0);
     app.stage.addChild(back06)
 
-    app.ticker.add(() => {
-        // back06.tileTransform.position.x -= 1.3;
-        // back05.tileTransform.position.x -= 1.1;
-        // back04.tileTransform.position.x -= 0.9;
-        // back03.tileTransform.position.x -= 0.7;
-        // back02.tileTransform.position.x -= 0.5;
-        // back01.tileTransform.position.x -= 0.3;
-    })
-
-
     const velocity = 5
 
     function walkingCharacter(position) {
@@ -136,44 +133,64 @@ function setup(loader, resources) {
         }
     }
 
-
-
-
-    function handleClick() {
-        alert('Bloco clicado!')
-    }
-
-
     // Personagem //
     const character = new PIXI.Sprite(resources.character.texture);
     character.id = 'personagem'
-    character.anchor.set(0.5);
-    configureObject(app, character, 0.6, 100, middle.y * 1.5, true)
+    character.anchor.set(0.3); //posicao do personagem
+    configureObject(app, character, 0.6, 100, middle.y * 1.5, false, false)
 
-    // Ouvinte de clique para chamar função
-    // target.on('pointerup', handleClick);
 
+
+
+
+    // const blurFilter = new PIXI.filters.BlurFilter(0);
+    // Crie um sprite para o alvo
+    const target = new PIXI.Graphics();
+    target.beginFill(0x39916f);// (0x pra iniciar a cor, depois posso colocar a cor que for.)
+    target.drawRect(0, 0, 50, 50);
+    target.endFill();
+    configureObject(app, target, 1, middle.x, app.screen.height - 100, true, true)
+
+
+
+
+    const textures = []
+    for (let i = 0; i < 8; i++) {
+        const texture = new PIXI.Texture.from(`img/Persona2m/Walk0${i+1}.png`)
+        textures.push(texture)
+    }
+
+    const persona = new PIXI.AnimatedSprite(textures);
+    persona.position.set(0, 276);
+    persona.scale.set(5, 5)
+    app.stage.addChild(persona)
+    // persona.play()
+    persona.animationSpeed = 0.12
+    
     document.addEventListener("keydown", function (event) {
         // O evento do parâmetro é do tipo KeyboardEvent
-
+        
         const speed = 8;
-
+        
         if (event.code === 'KeyA' || event.code === 'ArrowLeft') {
             // character.x -= speed;
             walkingCharacter('back')
         }
-
+        
         if (event.code === 'KeyW' || event.code === 'ArrowUp') {
-            character.y -= speed;
+            // persona.y -= speed;
+            // gsap.to(persona, { pixi: { y: 0 } })
         }
-
+        
         if (event.code === 'KeyS' || event.code === 'ArrowDown') {
-            character.y += speed;
+            persona.y += speed;
         }
-
+        
         if (event.code === 'KeyD' || event.code === 'ArrowRight') {
-            // character.x += speed;
+            // persona.x += speed;
             walkingCharacter('front')
+            persona.animationSpeed = 0.12
+            persona.play()
         }
 
         if (event.code === 'Space') {
@@ -182,15 +199,41 @@ function setup(loader, resources) {
         console.log(event.code)
     });
 
-    const blurFilter = new PIXI.filters.BlurFilter(0);
-    // scene.filters = [blurFilter];
 
-    // Crie um sprite para o alvo
-    const target = new PIXI.Graphics();
-    target.beginFill(0x39916f);// (0x pra iniciar a cor, depois posso colocar a cor que for.)
-    target.drawRect(0, 0, 50, 50);
-    target.endFill();
-    configureObject(app, target, 1, middle.x, app.screen.height - 100, true, true)
+    document.addEventListener("keyup", function (event) {
+        // O evento do parâmetro é do tipo KeyboardEvent
+
+        const speed = 8;
+
+        // if (event.code === 'KeyA' || event.code === 'ArrowLeft') {
+        //     // character.x -= speed;
+        //     walkingCharacter('back')
+        // }
+
+        // if (event.code === 'KeyW' || event.code === 'ArrowUp') {
+        //     // persona.y -= speed;
+        //     // gsap.to(persona, { pixi: { y: 0 } })
+        // }
+
+        // if (event.code === 'KeyS' || event.code === 'ArrowDown') {
+        //     persona.y += speed;
+        // }
+
+        if (event.code === 'KeyD' || event.code === 'ArrowRight') {
+            // persona.x += speed;
+            // walkingCharacter('front')
+            persona.animationSpeed = 0
+
+            console.log(persona)
+        }
+
+        // if (event.code === 'Space') {
+        //     setInterval(() => { character.angle += 1 }, 10)
+        // }
+        // console.log(event.code)
+    });
+
+
 
 
     // Função de atualização do jogo
@@ -207,15 +250,6 @@ const sound = new Howl({
     autoplay: true
 });
 
-// debugger
-
-// Adicione controles de teclado
-// const keys = {
-//     left: keyboard('ArrowLeft'),
-//     right: keyboard('ArrowRight'),
-//     up: keyboard('ArrowUp'),
-//     down: keyboard('ArrowDown'),
-// };
 
 app.stage.sortableChildren = true;
 
