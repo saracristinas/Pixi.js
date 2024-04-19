@@ -10,7 +10,7 @@ document.body.appendChild(app.view);
 
 // Carregue os recursos do jogo
 PIXI.Loader.shared
-    .add('character', 'img/geral/bonequin.png')
+
     .add('back01', 'img/cenario/01.png')
     .add('back02', 'img/cenario/02.png')
     .add('back03', 'img/cenario/03.png')
@@ -18,7 +18,7 @@ PIXI.Loader.shared
     .add('back06', 'img/cenario/05.png')
     .add('back05', 'img/cenario/06.png')
     .add('sounds', 'sound/efeito-sonoro.mp3') //testando o som
-    .add('personaJson', 'img/walking/spritesheet.json')
+    // .add('personaJson', 'img/walking/spritesheet.json')
     .load(setup);
 
 
@@ -35,17 +35,10 @@ function configureObject(app, obj, scale, x, y, visible = true, interactive = fa
 }
 
 function setup(loader, resources) {
-
-
-
-
     const middle = {
         x: app.screen.width / 2,
         y: app.screen.height / 2
     }
-
-
-
 
     // cenario //Modifico a imagem abaixo do personagem (o background);
     const back01 = new PIXI.TilingSprite(
@@ -133,11 +126,11 @@ function setup(loader, resources) {
         }
     }
 
-    // Personagem //
-    const character = new PIXI.Sprite(resources.character.texture);
-    character.id = 'personagem'
-    character.anchor.set(0.3); //posicao do personagem
-    configureObject(app, character, 0.6, 100, middle.y * 1.5, false, false)
+    // // Personagem //
+    // const character = new PIXI.Sprite(resources.character.texture);
+    // character.id = 'personagem'
+    // character.anchor.set(0.3); //posicao do personagem
+    // configureObject(app, character, 0.6, 100, middle.y * 1.5, false, false)
 
 
 
@@ -151,46 +144,88 @@ function setup(loader, resources) {
     target.endFill();
     configureObject(app, target, 1, middle.x, app.screen.height - 100, true, true)
 
+    gsap.to(target, { angle: 360, delay: 5 })
 
 
 
-    const textures = []
+    const texturesAndando = []
     for (let i = 0; i < 8; i++) {
-        const texture = new PIXI.Texture.from(`img/Persona2m/Walk0${i+1}.png`)
-        textures.push(texture)
+        const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Andar/Walk0${i + 1}.png`)
+        texturesAndando.push(texture)
     }
 
-    const persona = new PIXI.AnimatedSprite(textures);
+
+    const texturesParada = []
+    for (let i = 0; i < 8; i++) {
+        const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Descansar/Descanso0${i + 1}.png`)
+        texturesParada.push(texture)
+    }
+
+
+    const persona = new PIXI.AnimatedSprite(texturesParada);
     persona.position.set(0, 276);
     persona.scale.set(5, 5)
     app.stage.addChild(persona)
-    // persona.play()
+    persona.play();
     persona.animationSpeed = 0.12
-    
-    document.addEventListener("keydown", function (event) {
+
+
+    let click = false;
+    const personaActions = (action) => {
+
+        // if (!click) {
+        //     click = true
+            persona.animationSpeed = 0.12
+            switch (action) {
+                case 'parada':
+                    persona.textures = texturesParada;
+                    persona.play()
+                    break;
+
+                case 'andar':
+                    if(persona.textures === texturesAndando) return
+                    persona.textures = texturesAndando;
+                    persona.play()
+                    break;
+
+                default:
+                    break;
+            }
+        
+        
+        // debugger
+        // }
+
+
+
+    }
+
+
+    document.addEventListener("keydown", function (event) { //
         // O evento do parâmetro é do tipo KeyboardEvent
-        
+
         const speed = 8;
-        
+
         if (event.code === 'KeyA' || event.code === 'ArrowLeft') {
             // character.x -= speed;
             walkingCharacter('back')
+            persona.animationSpeed -= 0.12
+            persona.play()
         }
-        
+
         if (event.code === 'KeyW' || event.code === 'ArrowUp') {
             // persona.y -= speed;
             // gsap.to(persona, { pixi: { y: 0 } })
         }
-        
+
         if (event.code === 'KeyS' || event.code === 'ArrowDown') {
             persona.y += speed;
         }
-        
+
         if (event.code === 'KeyD' || event.code === 'ArrowRight') {
             // persona.x += speed;
             walkingCharacter('front')
-            persona.animationSpeed = 0.12
-            persona.play()
+            personaActions('andar')
         }
 
         if (event.code === 'Space') {
@@ -201,36 +236,10 @@ function setup(loader, resources) {
 
 
     document.addEventListener("keyup", function (event) {
-        // O evento do parâmetro é do tipo KeyboardEvent
-
-        const speed = 8;
-
-        // if (event.code === 'KeyA' || event.code === 'ArrowLeft') {
-        //     // character.x -= speed;
-        //     walkingCharacter('back')
-        // }
-
-        // if (event.code === 'KeyW' || event.code === 'ArrowUp') {
-        //     // persona.y -= speed;
-        //     // gsap.to(persona, { pixi: { y: 0 } })
-        // }
-
-        // if (event.code === 'KeyS' || event.code === 'ArrowDown') {
-        //     persona.y += speed;
-        // }
-
         if (event.code === 'KeyD' || event.code === 'ArrowRight') {
-            // persona.x += speed;
-            // walkingCharacter('front')
-            persona.animationSpeed = 0
-
-            console.log(persona)
+            click = false
+            personaActions('parada')
         }
-
-        // if (event.code === 'Space') {
-        //     setInterval(() => { character.angle += 1 }, 10)
-        // }
-        // console.log(event.code)
     });
 
 
