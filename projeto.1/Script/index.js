@@ -1,4 +1,6 @@
 //Crie a aplicação Pixi.js //cria a imagem
+
+//ERRADOOOOOOOOOOOOOO
 const app = new PIXI.Application({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -134,7 +136,7 @@ function setup(loader, resources) {
     target.endFill();
     configureObject(app, target, 1, middle.x, app.screen.height - 100, true, true)
 
-    gsap.to(target, { angle: 360, delay: 5 })
+    gsap.to(target, { angle: 360, delay: 5 }) // usado no target para fazer a rotacao
 
     const texturesAndando = []
     for (let i = 0; i < 8; i++) {
@@ -142,20 +144,25 @@ function setup(loader, resources) {
         texturesAndando.push(texture)
     }
 
-
     const texturesParada = []
     for (let i = 0; i < 5; i++) { //looping para fazer a contagem de a 8, ele percorre toda a imagem
         const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Descansar/Descanso${i + 1}.png`)
         texturesParada.push(texture)
     }
 
-
-    const texturesVoltando = [];
-    for (let i = 5; i > 0; i--) { // Loop reverso, começando de 5 e indo até 1
-        const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Descansar/Descanso${i}.png`);
-        texturesVoltando.push(texture);
+    //////// Adicionando o metodo pra sentar
+    const texturesSentando = []
+    for (let i = 0; i < 9; i++) { //looping para fazer a contagem de a 8, ele percorre toda a imagem
+        const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Descansar/Idle0${i + 1}.png`)
+        texturesSentando.push(texture)
     }
 
+
+    // const texturesVoltando = [];
+    // for (let i = 5; i > 0; i--) { // Loop reverso, começando de 5 e indo até 1
+    //     const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Descansar/Descanso${i}.png`);
+    //     texturesVoltando.push(texture);
+    // }
 
     const persona = new PIXI.AnimatedSprite(texturesParada);
     persona.position.set(0, 350); //x = 0 e y =350 (obs: X e vertical e y horizontal)
@@ -204,6 +211,10 @@ function setup(loader, resources) {
         }
 
         if (event.code === 'KeyS' || event.code === 'ArrowDown') {
+            persona.textures = texturesSentando;
+            persona.animationSpeed -= 0.18
+            persona.play();
+            
             // persona.y += speed; //nao e necessario colocar o personagem pra baixo, (por enquanto)
         }
 
@@ -211,6 +222,8 @@ function setup(loader, resources) {
             // persona.x += speed;
             walkingCharacter('front')
             personaActions('andar')
+            // persona.animationSpeed += 0.12 //velocidade do persona
+            persona.play()
         }
 
         if (event.code === 'Space') {
@@ -225,6 +238,7 @@ function setup(loader, resources) {
             personaActions('parada')
         }
     });
+
     // Função de atualização do jogo
     app.ticker.add(delta => {
 
