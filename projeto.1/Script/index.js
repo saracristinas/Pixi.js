@@ -152,17 +152,29 @@ function setup(loader, resources) {
 
     //////// Adicionando o metodo pra sentar
     const texturesSentando = []
-    for (let i = 0; i < 9; i++) { //looping para fazer a contagem de a 8, ele percorre toda a imagem
-        const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Descansar/Idle0${i + 1}.png`)
+    for (let i = 1; i < 6; i++) { //looping para fazer a contagem de a 8, ele percorre toda a imagem
+        const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Descansar/Idle${i}.png`)
         texturesSentando.push(texture)
     }
 
+    const texturesSentada = []
+    for (let i = 6; i < 9; i++) { //looping para fazer a contagem de a 8, ele percorre toda a imagem
+        const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Descansar/Idle${i}.png`)
+        texturesSentada.push(texture)
+    }
 
-    // const texturesVoltando = [];
-    // for (let i = 5; i > 0; i--) { // Loop reverso, começando de 5 e indo até 1
-    //     const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Descansar/Descanso${i}.png`);
-    //     texturesVoltando.push(texture);
-    // }
+    const texturesLevantando = []
+    for (let i = 9; i < 11; i++) { //looping para fazer a contagem de a 8, ele percorre toda a imagem
+        const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Descansar/Idle${i}.png`)
+        texturesLevantando.push(texture)
+    }
+
+    texturesLevantando
+    debugger
+
+
+
+
 
     const persona = new PIXI.AnimatedSprite(texturesParada);
     persona.position.set(0, 350); //x = 0 e y =350 (obs: X e vertical e y horizontal)
@@ -192,7 +204,10 @@ function setup(loader, resources) {
         }
     }
 
-    document.addEventListener("keydown", function (event) { 
+
+    let sentada = false
+
+    document.addEventListener("keydown", function (event) {
         // O evento do parâmetro é do tipo KeyboardEvent
         // O evento e acionado quando uma tecla e pressionada; 
 
@@ -201,7 +216,7 @@ function setup(loader, resources) {
         if (event.code === 'KeyA' || event.code === 'ArrowLeft') {
             // character.x -= speed;
             walkingCharacter('back')
-            persona.animationSpeed -= 0.12
+            persona.animationSpeed = 0.12
             persona.play()
         }
 
@@ -210,12 +225,40 @@ function setup(loader, resources) {
             // gsap.to(persona, { pixi: { y: 0 } })
         }
 
+        //////executa o codigo pra sentar e descansar, mas ainda nao levanta//////
         if (event.code === 'KeyS' || event.code === 'ArrowDown') {
-            persona.textures = texturesSentando;
-            persona.animationSpeed -= 0.18
-            persona.play();
-            
-            // persona.y += speed; //nao e necessario colocar o personagem pra baixo, (por enquanto)
+
+
+            if (!sentada) {
+                persona.textures = texturesSentando;
+                // persona.animationSpeed -= 0.18
+                persona.loop = false;
+                persona.play();
+
+                setTimeout(() => {
+                    persona.textures = texturesSentada;
+                    persona.animationSpeed = 0.02
+                    persona.loop = true;
+                    persona.play();
+                }, 800);
+            } else {
+                persona.textures = texturesLevantando;
+                persona.animationSpeed = 0.18
+                persona.loop = false;
+                persona.play();
+
+                setTimeout(() => {
+                    persona.textures = texturesParada;
+                    persona.animationSpeed = 0.18
+                    persona.loop = true;
+                    persona.play();
+                }, 500);
+            }
+
+
+            sentada = !sentada
+
+
         }
 
         if (event.code === 'KeyD' || event.code === 'ArrowRight') {
