@@ -126,16 +126,6 @@ function setup(loader, resources) {
         }
     }
 
-    // // Personagem //
-    // const character = new PIXI.Sprite(resources.character.texture);
-    // character.id = 'personagem'
-    // character.anchor.set(0.3); //posicao do personagem
-    // configureObject(app, character, 0.6, 100, middle.y * 1.5, false, false)
-
-
-
-
-
     // const blurFilter = new PIXI.filters.BlurFilter(0);
     // Crie um sprite para o alvo
     const target = new PIXI.Graphics();
@@ -146,8 +136,6 @@ function setup(loader, resources) {
 
     gsap.to(target, { angle: 360, delay: 5 })
 
-
-
     const texturesAndando = []
     for (let i = 0; i < 8; i++) {
         const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Andar/Walk0${i + 1}.png`)
@@ -156,53 +144,53 @@ function setup(loader, resources) {
 
 
     const texturesParada = []
-    for (let i = 0; i < 8; i++) {
-        const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Descansar/Descanso0${i + 1}.png`)
+    for (let i = 0; i < 5; i++) { //looping para fazer a contagem de a 8, ele percorre toda a imagem
+        const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Descansar/Descanso${i + 1}.png`)
         texturesParada.push(texture)
     }
 
 
+    const texturesVoltando = [];
+    for (let i = 5; i > 0; i--) { // Loop reverso, começando de 5 e indo até 1
+        const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Descansar/Descanso${i}.png`);
+        texturesVoltando.push(texture);
+    }
+
+
     const persona = new PIXI.AnimatedSprite(texturesParada);
-    persona.position.set(0, 276);
+    persona.position.set(0, 350); //x = 0 e y =350 (obs: X e vertical e y horizontal)
     persona.scale.set(5, 5)
     app.stage.addChild(persona)
     persona.play();
     persona.animationSpeed = 0.12
-
 
     let click = false;
     const personaActions = (action) => {
 
         // if (!click) {
         //     click = true
-            persona.animationSpeed = 0.12
-            switch (action) {
-                case 'parada':
-                    persona.textures = texturesParada;
-                    persona.play()
-                    break;
+        persona.animationSpeed = 0.12
+        switch (action) {
+            case 'parada':
+                persona.textures = texturesParada;
+                persona.play()
+                break;
 
-                case 'andar':
-                    if(persona.textures === texturesAndando) return
-                    persona.textures = texturesAndando;
-                    persona.play()
-                    break;
+            case 'andar':
+                if (persona.textures === texturesAndando) return
+                persona.textures = texturesAndando;
+                persona.play()
+                break;
 
-                default:
-                    break;
-            }
-        
-        
-        // debugger
-        // }
-
-
-
+            default:
+                break;
+        }
     }
 
 
-    document.addEventListener("keydown", function (event) { //
+    document.addEventListener("keydown", function (event) { 
         // O evento do parâmetro é do tipo KeyboardEvent
+        // O evento e acionado quando uma tecla e pressionada; 
 
         const speed = 8;
 
@@ -241,10 +229,6 @@ function setup(loader, resources) {
             personaActions('parada')
         }
     });
-
-
-
-
     // Função de atualização do jogo
     app.ticker.add(delta => {
 
@@ -261,5 +245,3 @@ const sound = new Howl({
 
 
 app.stage.sortableChildren = true;
-
-
