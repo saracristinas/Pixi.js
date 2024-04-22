@@ -167,8 +167,6 @@ function setup(loader, resources) {
     let click = false;
     const personaActions = (action) => {
 
-        // if (!click) {
-        //     click = true
         persona.animationSpeed = 0.12
         switch (action) {
             case 'parada':
@@ -186,7 +184,6 @@ function setup(loader, resources) {
                 break;
         }
     }
-
 
     document.addEventListener("keydown", function (event) { 
         // O evento do parâmetro é do tipo KeyboardEvent
@@ -207,7 +204,7 @@ function setup(loader, resources) {
         }
 
         if (event.code === 'KeyS' || event.code === 'ArrowDown') {
-            persona.y += speed;
+            // persona.y += speed; //nao e necessario colocar o personagem pra baixo, (por enquanto)
         }
 
         if (event.code === 'KeyD' || event.code === 'ArrowRight') {
@@ -221,7 +218,6 @@ function setup(loader, resources) {
         }
         console.log(event.code)
     });
-
 
     document.addEventListener("keyup", function (event) {
         if (event.code === 'KeyD' || event.code === 'ArrowRight') {
