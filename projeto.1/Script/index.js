@@ -139,12 +139,18 @@ function setup(loader, resources) {
     gsap.to(target, { angle: 360, delay: 5 }) // usado no target para fazer a rotacao
 
     const texturesAndando = []
-    const texturesVoltando = []
-    
     for (let i = 0; i < 8; i++) {
         const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Andar/Walk0${i + 1}.png`)
         texturesAndando.push(texture)
     }
+    
+    const texturesCorrendo = []
+    for (let i = 0; i < 8; i++){
+        const texture = new PIXI.texture.from(`img/Persona2m/acoes/Correr/Run0${i + 1}.png`)
+        texturesCorrendo.push(texture)
+    }
+
+    const texturesVoltando = []
     for (let i = 0; i < 8; i++) {
         const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Andar/Walk0${i + 1}.png`)
         texturesVoltando.push(texture)
@@ -178,8 +184,6 @@ function setup(loader, resources) {
     texturesLevantando
 
 
-    // const texturesPulando = []
-    // for (let i = )
 
     const persona = new PIXI.AnimatedSprite(texturesParada);
     persona.position.set(0, 350); //x = 0 e y =350 (obs: X e vertical e y horizontal)
