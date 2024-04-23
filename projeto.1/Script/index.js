@@ -139,9 +139,16 @@ function setup(loader, resources) {
     gsap.to(target, { angle: 360, delay: 5 }) // usado no target para fazer a rotacao
 
     const texturesAndando = []
+    const texturesVoltando = []
+    
     for (let i = 0; i < 8; i++) {
         const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Andar/Walk0${i + 1}.png`)
         texturesAndando.push(texture)
+    }
+    for (let i = 0; i < 8; i++) {
+        const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Andar/Walk0${i + 1}.png`)
+        texturesVoltando.push(texture)
+        texturesVoltando.reverse();
     }
 
     const texturesParada = []
@@ -168,8 +175,11 @@ function setup(loader, resources) {
         const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Descansar/Idle${i}.png`)
         texturesLevantando.push(texture)
     }
-
     texturesLevantando
+
+
+    // const texturesPulando = []
+    // for (let i = )
 
     const persona = new PIXI.AnimatedSprite(texturesParada);
     persona.position.set(0, 350); //x = 0 e y =350 (obs: X e vertical e y horizontal)
@@ -194,6 +204,12 @@ function setup(loader, resources) {
                 persona.play()
                 break;
 
+            case 'voltar':
+                if (persona.textures === texturesVoltando) return
+                persona.textures = texturesVoltando;
+                persona.play()
+                break;
+
             default:
                 break;
         }
@@ -208,9 +224,8 @@ function setup(loader, resources) {
         const speed = 8;
 
         if (event.code === 'KeyA' || event.code === 'ArrowLeft') {
-            // character.x -= speed;
             walkingCharacter('back')
-            persona.animationSpeed = 0.12
+            personaActions('voltar')
             persona.play()
         }
 
@@ -243,7 +258,7 @@ function setup(loader, resources) {
 
                 setTimeout(() => {
                     persona.textures = texturesParada;
-                    persona.animationSpeed = 0.18
+                    persona.animationSpeed = 0.12
                     persona.loop = true;
                     persona.play();
                 }, 500);
@@ -255,7 +270,6 @@ function setup(loader, resources) {
             // persona.x += speed;
             walkingCharacter('front')
             personaActions('andar')
-            // persona.animationSpeed += 0.12 //velocidade do persona
             persona.play()
         }
 
@@ -266,7 +280,7 @@ function setup(loader, resources) {
     });
 
     document.addEventListener("keyup", function (event) {
-        if (event.code === 'KeyD' || event.code === 'ArrowRight') {
+        if (event.code === 'KeyD' || event.code === 'ArrowRight' || event.code === 'KeyA' || event.code === 'ArrowLeft') {
             click = false
             personaActions('parada')
         }
