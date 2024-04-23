@@ -143,10 +143,10 @@ function setup(loader, resources) {
         const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Andar/Walk0${i + 1}.png`)
         texturesAndando.push(texture)
     }
-    
+
     const texturesCorrendo = []
-    for (let i = 0; i < 8; i++){
-        const texture = new PIXI.texture.from(`img/Persona2m/acoes/Correr/Run0${i + 1}.png`)
+    for (let i = 0; i < 8; i++) {
+        const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Correr/Run${i + 1}.png`)
         texturesCorrendo.push(texture)
     }
 
@@ -214,6 +214,12 @@ function setup(loader, resources) {
                 persona.play()
                 break;
 
+            case 'correr':
+                if (persona.textures === texturesCorrendo) return
+                persona.textures = texturesCorrendo;
+                persona.play()
+                break;
+
             default:
                 break;
         }
@@ -278,7 +284,10 @@ function setup(loader, resources) {
         }
 
         if (event.code === 'Space') {
-            setInterval(() => { character.angle += 1 }, 10)
+            walkingCharacter('front')
+            personaActions('correr')
+            persona.play()
+            // setInterval(() => { character.angle += 1 }, 10)
         }
         console.log(event.code)
     });
@@ -286,6 +295,11 @@ function setup(loader, resources) {
     document.addEventListener("keyup", function (event) {
         if (event.code === 'KeyD' || event.code === 'ArrowRight' || event.code === 'KeyA' || event.code === 'ArrowLeft') {
             click = false
+            personaActions('parada')
+        }
+
+        if(event.code === 'Space'){
+            click = false 
             personaActions('parada')
         }
     });
