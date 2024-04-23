@@ -170,11 +170,6 @@ function setup(loader, resources) {
     }
 
     texturesLevantando
-    debugger
-
-
-
-
 
     const persona = new PIXI.AnimatedSprite(texturesParada);
     persona.position.set(0, 350); //x = 0 e y =350 (obs: X e vertical e y horizontal)
@@ -204,7 +199,6 @@ function setup(loader, resources) {
         }
     }
 
-
     let sentada = false
 
     document.addEventListener("keydown", function (event) {
@@ -222,7 +216,7 @@ function setup(loader, resources) {
 
         if (event.code === 'KeyW' || event.code === 'ArrowUp') {
             // persona.y -= speed;
-            // gsap.to(persona, { pixi: { y: 0 } })
+            gsap.to(persona, { pixi: { y: 0 } })
         }
 
         //////executa o codigo pra sentar e descansar, mas ainda nao levanta//////
@@ -254,11 +248,7 @@ function setup(loader, resources) {
                     persona.play();
                 }, 500);
             }
-
-
             sentada = !sentada
-
-
         }
 
         if (event.code === 'KeyD' || event.code === 'ArrowRight') {
