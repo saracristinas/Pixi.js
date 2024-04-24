@@ -20,7 +20,6 @@ PIXI.Loader.shared
     .add('back06', 'img/cenario/05.png')
     .add('back05', 'img/cenario/06.png')
     .add('sounds', 'sound/efeito-sonoro.mp3') //testando o som
-    // .add('personaJson', 'img/walking/spritesheet.json')
     .load(setup);
 
 
@@ -48,6 +47,7 @@ function setup(loader, resources) {
         app.screen.width,
         app.screen.height
     )
+    debugger
 
     back01.tileTransform.scale.set(0.8);//aqui mudo a escola da imagem
     app.stage.addChild(back01)
@@ -99,8 +99,7 @@ function setup(loader, resources) {
     back06.tileTransform.scale.set(1.0);
     app.stage.addChild(back06)
 
-    const velocity = 5
-
+    let velocity = 4;
     function walkingCharacter(position) {
         switch (position) {
             case "front":
@@ -127,6 +126,8 @@ function setup(loader, resources) {
                 break;
         }
     }
+
+ 
 
     // const blurFilter = new PIXI.filters.BlurFilter(0);
     // Crie um sprite para o alvo
@@ -184,18 +185,18 @@ function setup(loader, resources) {
     texturesLevantando
 
     const persona = new PIXI.AnimatedSprite(texturesParada);
-    persona.position.set(0, 350); //x = 0 e y =350 (obs: X e vertical e y horizontal)
-    persona.scale.set(5, 5)
+    persona.position.set(60, 440); //x = 0 e y =350 (obs: X e vertical e y horizontal)
+    persona.scale.set(4, 4)
     app.stage.addChild(persona)
     persona.play();
     persona.animationSpeed = 0.12
 
 
     let click = false;
-    
+
     const personaActions = (action) => {
 
-        persona.animationSpeed = 0.12
+        persona.animationSpeed = 0.12 //velocidade que o personagem faz os movimentos
         switch (action) {
             case 'parada':
                 persona.textures = texturesParada;
@@ -217,7 +218,8 @@ function setup(loader, resources) {
             case 'correr':
                 if (persona.textures === texturesCorrendo) return
                 persona.textures = texturesCorrendo;
-                persona.play()                
+                persona.play()
+
                 break;
 
             default:
@@ -281,13 +283,15 @@ function setup(loader, resources) {
             walkingCharacter('front')
             personaActions('andar')
             persona.play()
+            velocity = 4;
+
         }
 
         if (event.code === 'Space') {
             walkingCharacter('front')
             personaActions('correr')
             persona.play()
-            // setInterval(() => { character.angle += 1 }, 10)
+            velocity = 15; //velocidade dela correndo
         }
         console.log(event.code)
     });
