@@ -183,8 +183,6 @@ function setup(loader, resources) {
     }
     texturesLevantando
 
-
-
     const persona = new PIXI.AnimatedSprite(texturesParada);
     persona.position.set(0, 350); //x = 0 e y =350 (obs: X e vertical e y horizontal)
     persona.scale.set(5, 5)
@@ -192,7 +190,9 @@ function setup(loader, resources) {
     persona.play();
     persona.animationSpeed = 0.12
 
+
     let click = false;
+    
     const personaActions = (action) => {
 
         persona.animationSpeed = 0.12
@@ -217,7 +217,7 @@ function setup(loader, resources) {
             case 'correr':
                 if (persona.textures === texturesCorrendo) return
                 persona.textures = texturesCorrendo;
-                persona.play()
+                persona.play()                
                 break;
 
             default:
