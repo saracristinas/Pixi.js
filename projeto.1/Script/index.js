@@ -213,15 +213,18 @@ function setup(loader, resources) {
 
     app.stage.addChild(personaPulando);
 
-
+    const initY = persona.y
     function pular() {
 
 
+        
         persona.textures = texturesPulando
+        persona.animationSpeed = .14
+        if(persona.y > initY) personagotoAndStop(7)
         persona.play()
 
 
-        const initY = persona.y
+
         const tl = gsap.timeline()
         tl.to(persona, {
             y: 300,
@@ -232,14 +235,13 @@ function setup(loader, resources) {
         tl.to(persona, {
             y: initY,
             duration: .5,
-            ease: 'power1.in'
+            ease: 'power1.in',
+            onComplete: function () {
+                persona.textures = texturesParada
+                persona.animationSpeed = .14
+                persona.play()
+            }
         })
-
-
-        setTimeout(() => {
-            persona.textures = texturesParada
-        }, 1700);
-
     }
 
 
