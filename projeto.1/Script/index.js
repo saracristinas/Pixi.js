@@ -1,5 +1,6 @@
 //Crie a aplicação Pixi.js //cria a imagem
 
+
 //ERRADOOOOOOOOOOOOOO
 const app = new PIXI.Application({
     width: window.innerWidth,
@@ -127,7 +128,7 @@ function setup(loader, resources) {
         }
     }
 
- 
+
 
     // const blurFilter = new PIXI.filters.BlurFilter(0);
     // Crie um sprite para o alvo
@@ -184,6 +185,13 @@ function setup(loader, resources) {
     }
     texturesLevantando
 
+
+    const texturesPulando = []
+    for (let i = 1; i < 12; i++) {
+        const texture = new PIXI.Texture.from(`img/Persona2m/acoes/Pular/Jump${i + 1}.png`)
+        texturesPulando.push(texture)
+    }
+
     const persona = new PIXI.AnimatedSprite(texturesParada);
     persona.position.set(60, 440); //x = 0 e y =350 (obs: X e vertical e y horizontal)
     persona.scale.set(4, 4)
@@ -191,8 +199,50 @@ function setup(loader, resources) {
     persona.play();
     persona.animationSpeed = 0.12
 
-
     let click = false;
+
+
+
+    const personaPulando = new PIXI.AnimatedSprite(texturesPulando);
+    personaPulando.position.set(60, 440); // Defina as coordenadas iniciais do personagem
+    personaPulando.animationSpeed = 0.1; // Ajuste a velocidade da animação conforme necessário
+    personaPulando.loop = false; // Define se a animação deve ser repetida ou não
+    personaPulando.visible = false; // Por padrão, o personagem pulando não será visível
+    // Defina o tamanho do sprite do personagem pulando
+    personaPulando.scale.set(4); // Ajuste o valor conforme necessário para aumentar o tamanho do personagem
+
+    app.stage.addChild(personaPulando);
+
+
+    function pular() {
+
+
+        persona.textures = texturesPulando
+        persona.play()
+
+
+        const initY = persona.y
+        const tl = gsap.timeline()
+        tl.to(persona, {
+            y: 300,
+            duration: .5,
+            ease: 'power1.out'
+        })
+
+        tl.to(persona, {
+            y: initY,
+            duration: .5,
+            ease: 'power1.in'
+        })
+
+
+        setTimeout(() => {
+            persona.textures = texturesParada
+        }, 1700);
+
+    }
+
+
 
     const personaActions = (action) => {
 
@@ -219,7 +269,12 @@ function setup(loader, resources) {
                 if (persona.textures === texturesCorrendo) return
                 persona.textures = texturesCorrendo;
                 persona.play()
+                break
 
+            case 'pular':
+                if (persona.textures === texturesPulando) return
+                persona.textures = texturesPulando;
+                persona.play()
                 break;
 
             default:
@@ -232,7 +287,6 @@ function setup(loader, resources) {
     document.addEventListener("keydown", function (event) {
         // O evento do parâmetro é do tipo KeyboardEvent
         // O evento e acionado quando uma tecla e pressionada; 
-
         const speed = 8;
 
         if (event.code === 'KeyA' || event.code === 'ArrowLeft') {
@@ -246,7 +300,6 @@ function setup(loader, resources) {
             gsap.to(persona, { pixi: { y: 0 } })
         }
 
-        //////executa o codigo pra sentar e descansar, mas ainda nao levanta//////
         if (event.code === 'KeyS' || event.code === 'ArrowDown') {
 
 
@@ -288,6 +341,10 @@ function setup(loader, resources) {
         }
 
         if (event.code === 'Space') {
+            pular();
+        }
+
+        if (event.code === 'KeyC') {
             walkingCharacter('front')
             personaActions('correr')
             persona.play()
@@ -302,11 +359,17 @@ function setup(loader, resources) {
             personaActions('parada')
         }
 
-        if(event.code === 'Space'){
-            click = false 
+        if (event.code === 'KeyC') {
+            click = false
             personaActions('parada')
         }
+
+        // if (event.code === 'Space') {
+        //     click = false
+        //     personaActions('parada')
+        // }
     });
+
 
     // Função de atualização do jogo
     app.ticker.add(delta => {
